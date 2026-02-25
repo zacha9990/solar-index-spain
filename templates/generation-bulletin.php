@@ -75,10 +75,9 @@ $chart_payload = [
     ],
 ];
 
-wp_localize_script('sis-charts', 'sisChartData', $chart_payload);
-
 get_header();
 ?>
+<script>var sisChartData = <?php echo wp_json_encode($chart_payload); ?>;</script>
 
 <main class="sis-bulletin-wrap">
 <article class="sis-bulletin sis-bulletin--generation" id="post-<?php the_ID(); ?>">
