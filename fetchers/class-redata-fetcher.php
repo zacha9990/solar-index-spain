@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
 class SIS_REData_Fetcher {
 
     const BASE_URL    = 'https://apidatos.ree.es/es/datos/generacion/estructura-generacion';
-    const SOLAR_PV_ID = '1739'; // Solar fotovoltaica in estructura-generacion widget
+    const SOLAR_PV_ID = '1458'; // Solar fotovoltaica in estructura-generacion widget
 
     /**
      * Fetch monthly solar PV generation for Spain.

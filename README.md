@@ -384,7 +384,7 @@ $result = $f->fetch_monthly_generation(2025, 1);
 ```
 
 - **Endpoint:** `https://apidatos.ree.es/es/datos/generacion/estructura-generacion`
-- **Solar PV ID:** `1739`
+- **Solar PV ID:** `1458`
 - **Unit response:** MWh → dikonversi ke GWh (÷ 1000)
 - **Retry:** otomatis 3x dengan backoff 5 detik
 
@@ -467,7 +467,7 @@ time_trunc = month
 
 | Widget | Sumber | ID | Unit |
 |--------|--------|----|------|
-| `estructura-generacion` | Produksi solar PV | `1739` | MWh |
+| `estructura-generacion` | Produksi solar PV | `1458` | MWh |
 | `potencia-instalada` | Kapasitas solar PV | `1486` | MW |
 | `potencia-instalada` | Solar térmica (jangan pakai) | `1487` | MW |
 

@@ -214,7 +214,7 @@ https://apidatos.ree.es/es/datos/generacion/estructura-generacion?start_date=202
 Di response JSON, cari:
 ```json
 {
-  "id": "1739",
+  "id": "1458",
   "attributes": {
     "values": [{ "value": 3847210.5 }]
   }
@@ -390,7 +390,7 @@ wp post list --post_type=solar_cap_index --post_status=draft
 
 | Yang Dibutuhkan | Sumber |
 |----------------|--------|
-| Data generation (GWh) | REData API, id `1739`, satuan MWh ÷ 1000 |
+| Data generation (GWh) | REData API, id `1458`, satuan MWh ÷ 1000 |
 | Data capacity (GW) | REData API, id `1486`, satuan MW ÷ 1000 |
 | Double-check kapasitas | CNMC → Estadísticas mensuales renovables |
 | EU context (opsional) | Ember API |
