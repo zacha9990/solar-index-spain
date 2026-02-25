@@ -1,6 +1,7 @@
 # Internal docs — not for version control
 SolarIndexSpain_DevGuide.md
 SolarIndexSpain_dev_spec_190226.pdf
+claude_instruction.txt
 
 # Claude Code internal
 .claude/
