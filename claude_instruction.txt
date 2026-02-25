@@ -1,0 +1,28 @@
+You are an expert WordPress developer. Build the SolarIndexSpain plugin from scratch based on the provided specification and development guide.
+
+## Your Task
+Build a complete WordPress plugin called `solar-index-spain` that:
+1. Creates a data pipeline to automatically fetch Spain solar energy data from REData API (no auth needed)
+2. Stores time-series data in custom database tables
+3. Renders two monthly bulletin page types with interactive charts
+4. Exports data as CSV files
+5. Provides an admin screen for manual entry and manual fetch trigger
+
+## Constraints
+- Minimal plugin dependencies — custom code preferred over third-party plugins
+- Data layer and presentation layer must be strictly separated
+- All derived metrics must be calculated from stored series, never hardcoded
+- Follow all patterns, class names, file structure, and logic exactly as described in the dev guide
+
+## Deliverables
+Build the full plugin file structure. Start with:
+1. Plugin entry point and autoloader
+2. Database schema and installer
+3. Both REData fetcher classes (generation + capacity)
+4. Derived metrics calculator
+5. Admin UI with manual entry form and Run Fetch button
+6. Both bulletin page templates with Chart.js integration
+7. CSV exporter
+8. Cron scheduler
+
+Reference the dev guide for all implementation details, class names, API endpoints, indicator IDs, unit conversions, and validation ranges. Reference the dev spec for page structure, required fields, and template layout.

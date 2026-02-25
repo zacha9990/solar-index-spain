@@ -1,0 +1,20 @@
+# Internal docs — not for version control
+SolarIndexSpain_DevGuide.md
+SolarIndexSpain_dev_spec_190226.pdf
+
+# Claude Code internal
+.claude/
+
+# Memory files
+memory/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log

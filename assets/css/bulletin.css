@@ -1,0 +1,337 @@
+/* ═══════════════════════════════════════════════════════════════════
+   SolarIndexSpain — Bulletin & Data Hub Styles
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Layout ────────────────────────────────────────────────────────── */
+.sis-bulletin-wrap,
+.sis-hub-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+}
+
+.sis-bulletin,
+.sis-data-hub {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: #1a1a2e;
+    line-height: 1.6;
+}
+
+/* ── Breadcrumb ────────────────────────────────────────────────────── */
+.sis-breadcrumb {
+    font-size: 0.85em;
+    color: #888;
+    margin-bottom: 20px;
+    padding-top: 16px;
+}
+.sis-breadcrumb a { color: #2E86C1; text-decoration: none; }
+.sis-breadcrumb a:hover { text-decoration: underline; }
+.sis-breadcrumb span { margin: 0 6px; }
+
+/* ── Hero ──────────────────────────────────────────────────────────── */
+.sis-hero {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2E86C1 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 40px 36px 32px;
+    margin-bottom: 32px;
+}
+
+.sis-hero__eyebrow {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+
+.sis-hero h1.sis-hero__period {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin: 0 0 20px;
+    color: #fff;
+}
+
+.sis-hero__metric {
+    font-size: 3.5em;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.sis-unit {
+    font-size: 0.4em;
+    font-weight: 400;
+    opacity: 0.85;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+.sis-hero__changes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.9em;
+}
+
+.sis-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+.sis-badge--up   { background: rgba(30,132,73,0.25); color: #aef; }
+.sis-badge--down { background: rgba(180,40,40,0.25); color: #fcc; }
+
+.sis-source-tag {
+    opacity: 0.65;
+    font-size: 0.85em;
+}
+
+.sis-no-data {
+    opacity: 0.7;
+    font-style: italic;
+}
+
+/* ── Key Signals ───────────────────────────────────────────────────── */
+.sis-signals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 36px;
+}
+
+.sis-signal-box {
+    background: #f8f9fc;
+    border: 1px solid #e3e6ef;
+    border-radius: 10px;
+    padding: 20px 18px;
+}
+
+.sis-signal-box--accent {
+    background: #e8f4fd;
+    border-color: #b8daef;
+}
+
+.sis-signal-box h3 {
+    font-size: 0.78em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #666;
+    margin: 0 0 8px;
+    font-weight: 600;
+}
+
+.sis-signal-box__value {
+    font-size: 1.9em;
+    font-weight: 800;
+    color: #1a3a5c;
+    line-height: 1.1;
+    margin-bottom: 6px;
+}
+
+.sis-signal-box p {
+    font-size: 0.8em;
+    color: #777;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* ── Charts ────────────────────────────────────────────────────────── */
+.sis-charts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 36px;
+}
+
+.sis-chart-block {
+    background: #fff;
+    border: 1px solid #e3e6ef;
+    border-radius: 10px;
+    padding: 20px 20px 16px;
+}
+
+.sis-chart-block h3 {
+    font-size: 0.9em;
+    color: #444;
+    margin: 0 0 14px;
+    font-weight: 600;
+}
+
+/* ── Tables ────────────────────────────────────────────────────────── */
+.sis-table-section {
+    margin-bottom: 36px;
+}
+
+.sis-table-section h2,
+.sis-hub-header h1,
+.sis-downloads h2,
+.sis-methodology h2,
+.sis-citation h2,
+.sis-update-log h2,
+.sis-hub-bulletins h2 {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: #1a3a5c;
+    border-bottom: 2px solid #e3e6ef;
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.sis-table-scroll { overflow-x: auto; }
+
+.sis-key-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88em;
+}
+
+.sis-key-table th,
+.sis-key-table td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+}
+
+.sis-key-table thead th {
+    background: #f0f4f8;
+    font-weight: 700;
+    color: #333;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sis-key-table tbody tr:hover { background: #f9fbfd; }
+
+/* ── Downloads ─────────────────────────────────────────────────────── */
+.sis-downloads { margin-bottom: 32px; }
+
+.sis-download-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sis-btn-download {
+    display: inline-block;
+    background: #2E86C1;
+    color: #fff !important;
+    text-decoration: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 0.88em;
+    font-weight: 600;
+    transition: background 0.15s;
+}
+
+.sis-btn-download:hover { background: #1a5c8a; color: #fff !important; }
+
+.sis-btn-download--master {
+    background: #1E8449;
+}
+.sis-btn-download--master:hover { background: #155a32; }
+
+.sis-data-hub-link {
+    font-size: 0.85em;
+    color: #555;
+    margin-top: 8px;
+}
+.sis-data-hub-link a { color: #2E86C1; }
+
+/* ── Methodology ───────────────────────────────────────────────────── */
+.sis-methodology { margin-bottom: 32px; }
+.sis-methodology ul { padding-left: 20px; }
+.sis-methodology li { margin-bottom: 6px; font-size: 0.9em; color: #444; }
+
+/* ── Citation ──────────────────────────────────────────────────────── */
+.sis-citation { margin-bottom: 32px; }
+.sis-cite-block {
+    background: #f4f7fb;
+    border-left: 4px solid #2E86C1;
+    margin: 0;
+    padding: 14px 18px;
+    font-size: 0.88em;
+    color: #333;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+}
+
+/* ── Update Log ────────────────────────────────────────────────────── */
+.sis-update-log { margin-bottom: 32px; }
+.sis-log-text {
+    background: #f8f9fc;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-size: 0.85em;
+    white-space: pre-wrap;
+    color: #444;
+}
+
+/* ── Bulletin Footer Meta ──────────────────────────────────────────── */
+.sis-bulletin-meta {
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+    font-size: 0.82em;
+    color: #888;
+}
+.sis-bulletin-meta p { margin: 4px 0; }
+.sis-bulletin-meta a { color: #2E86C1; }
+
+/* ── Data Hub ──────────────────────────────────────────────────────── */
+.sis-hub-header {
+    margin-bottom: 32px;
+}
+.sis-hub-description {
+    color: #555;
+    margin-bottom: 16px;
+}
+.sis-hub-table td:first-child { font-weight: 600; }
+
+.sis-hub-bulletins { margin-bottom: 32px; }
+.sis-hub-bulletin-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.sis-hub-bulletin-list li a {
+    display: inline-block;
+    padding: 5px 12px;
+    border: 1px solid #b8daef;
+    border-radius: 4px;
+    font-size: 0.88em;
+    text-decoration: none;
+    color: #2E86C1;
+    background: #f0f8ff;
+}
+.sis-hub-bulletin-list li a:hover {
+    background: #2E86C1;
+    color: #fff;
+    border-color: #2E86C1;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .sis-hero { padding: 28px 20px 24px; }
+    .sis-hero__metric { font-size: 2.5em; }
+    .sis-signals { grid-template-columns: 1fr 1fr; }
+    .sis-signal-box__value { font-size: 1.5em; }
+    .sis-key-table th, .sis-key-table td { padding: 6px 8px; font-size: 0.82em; }
+}
+
+@media (max-width: 400px) {
+    .sis-signals { grid-template-columns: 1fr; }
+    .sis-hero__metric { font-size: 2em; }
+}
