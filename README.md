@@ -452,7 +452,7 @@ time_trunc = month
   "included": [
     {
       "type": "Solar fotovoltaica",
-      "id": "1739",
+      "id": "1458",
       "attributes": {
         "values": [
           { "value": 3847210.5, "datetime": "2025-01-31T..." }
@@ -547,7 +547,7 @@ build_pace_gw_yr = rolling_12m_added_gw
 | Metric | Min | Max | Aksi jika di luar range |
 |--------|-----|-----|------------------------|
 | Generation GWh | 500 | 8.000 | Throw `SIS_Validation_Exception` |
-| Capacity GW | 20.0 | 100.0 | Throw `SIS_Validation_Exception` |
+| Capacity GW | 15.0 | 100.0 | Throw `SIS_Validation_Exception` |
 | MoM change % | — | 80% | Throw `SIS_Validation_Exception` |
 | Penurunan kapasitas | — | 0.5 GW | Throw `SIS_Validation_Exception` |
 
@@ -694,10 +694,18 @@ Menggunakan **Chart.js v4** via CDN. Tidak perlu build step.
 
 ### Data Injection
 
-Data di-pass dari PHP ke JavaScript via `wp_localize_script()` sebelum `get_header()`:
+Data di-pass dari PHP ke JavaScript via **inline `<script>` tag** langsung di template, tepat setelah `get_header()`. Pendekatan ini lebih reliable dari `wp_localize_script()` karena tidak bergantung pada timing WordPress hook.
 
 ```php
-wp_localize_script('sis-charts', 'sisChartData', [
+get_header();
+?>
+<script>var sisChartData = <?php echo wp_json_encode($chart_payload); ?>;</script>
+```
+
+Struktur `$chart_payload`:
+
+```php
+[
     'type'         => 'generation',   // atau 'capacity'
     'labels'       => [...],          // array string bulan (oldest first)
     'values'       => [...],          // array float GWh/GW
@@ -713,7 +721,7 @@ wp_localize_script('sis-charts', 'sisChartData', [
     ],
     // untuk capacity:
     'additions' => [...],             // monthly additions array
-]);
+]
 ```
 
 ### Chart 1 — Trend 24 Bulan
@@ -849,6 +857,7 @@ define('DISABLE_WP_CRON', true);
 - Validasi `php_sapi_name() === 'cli'` — mati langsung jika dipanggil via HTTP
 - Support backfill: `php run-fetch.php [year] [month]`
 - Exit codes: `0` = sukses, `2` = validation error, `3` = unexpected error
+- Backfill path memanggil `SIS_Cron::create_bulletin_drafts()` (public) untuk membuat draft post setelah data tersimpan
 
 ```bash
 # Standard: fetch bulan lalu
@@ -856,6 +865,14 @@ php cron/run-fetch.php
 
 # Backfill spesifik
 php cron/run-fetch.php 2024 6
+
+# Loop backfill semua bulan (dari Laragon Terminal)
+for year in 2022 2023 2024 2025; do
+  for month in 1 2 3 4 5 6 7 8 9 10 11 12; do
+    php wp-content/plugins/solar-index-spain/cron/run-fetch.php $year $month
+    sleep 1
+  done
+done
 ```
 
 ### Email Notifikasi
@@ -951,7 +968,7 @@ SIS_{ClassName} → strtolower(str_replace(['SIS_', '_'], ['', '-'], $class))
 - `SIS_CSV_Exporter`: master CSV + monthly slice, naming convention per spec
 - `SIS_Admin_UI`: manual entry form, run-fetch button, fetch log viewer, CSV regen
 - `SIS_Cron`: WP-Cron schedule + `run_monthly_fetch()` dengan email notifikasi
-- `SIS_REData_Fetcher`: fetch generation dari `estructura-generacion` (id `1739`), 3x retry
+- `SIS_REData_Fetcher`: fetch generation dari `estructura-generacion`, 3x retry
 - `SIS_REData_Cap_Fetcher`: fetch capacity dari `potencia-instalada` (id `1486`), 3x retry
 - `SIS_Ember_Fetcher`: EU-27 rank & share dari Ember API (opsional)
 - Template `generation-bulletin.php`: hero metric, 4 signal boxes, 3 charts, key table
@@ -970,5 +987,19 @@ SIS_{ClassName} → strtolower(str_replace(['SIS_', '_'], ['', '-'], $class))
 
 ---
 
-*Dokumentasi ini mengacu pada plugin versi 1.0.0.*
+### v1.0.1 — Post-Launch Fixes (2026-02)
+
+**Bug fixes:**
+
+- **Solar PV ID salah di `estructura-generacion`:** ID yang terdokumentasi di dev guide (`1739`) tidak valid di production. ID aktual yang dikonfirmasi dari live endpoint adalah `1458`. Fix di `fetchers/class-redata-fetcher.php`.
+
+- **Chart tidak muncul di halaman bulletin:** `wp_localize_script()` yang dipanggil dari dalam template file tidak selalu reliable tergantung timing WordPress hook. Diganti dengan inline `<script>var sisChartData = ...;</script>` langsung di HTML setelah `get_header()`. Fix di `templates/generation-bulletin.php` dan `templates/capacity-bulletin.php`.
+
+- **Validasi gagal untuk data historis 2022:** `SOLAR_CAP_MIN_GW` di-set `20.0` tapi kapasitas Spanyol di awal 2022 masih ~16 GW. Diturunkan ke `15.0`. Fix di `includes/class-validator.php`.
+
+- **Backfill tidak membuat draft bulletin:** CLI backfill path di `cron/run-fetch.php` (dengan argumen year/month) tidak memanggil `create_bulletin_drafts()`. Fix: method dijadikan `public` di `SIS_Cron` dan dipanggil dari backfill path.
+
+---
+
+*Dokumentasi ini mengacu pada plugin versi 1.0.1.*
 *Update dokumen ini setiap ada perubahan arsitektur, schema, atau behavior API.*

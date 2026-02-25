@@ -192,9 +192,9 @@ for month in 1; do
 done
 ```
 
-> **Catatan penting:** REData menyimpan data historis yang cukup panjang, tapi akurasi data lama perlu diverifikasi. Rekomendasi: mulai dari Jan 2022 ke atas karena kapasitas di bawah 20 GW (batas validasi) belum terpenuhi di periode awal.
+> **Catatan penting:** REData menyimpan data historis yang cukup panjang, tapi akurasi data lama perlu diverifikasi. Batas validasi kapasitas minimum adalah **15 GW** — cocok untuk data historis mulai Jan 2022 ke atas (kapasitas Spanyol ~16 GW di awal 2022).
 >
-> Jika validasi gagal karena nilai di luar range historis (misal kapasitas < 20 GW di 2021), gunakan input manual (Opsi C) untuk periode tersebut.
+> Jika validasi gagal karena nilai di luar range historis (misal kapasitas < 15 GW di 2021), gunakan input manual (Opsi C) untuk periode tersebut.
 
 ---
 
@@ -373,8 +373,10 @@ wp post list --post_type=solar_cap_index --post_status=draft
 - REE kadang merevisi data kapasitas. Jika penurunan memang valid (revisi resmi), input via manual entry — form tidak melakukan validasi seketat cron.
 
 ### Chart tidak muncul di halaman bulletin
-- Buka browser DevTools → Console. Jika ada error `sisChartData is not defined`, artinya `wp_localize_script` tidak terpanggil.
+- Buka browser DevTools → Console. Jika ada error `sisChartData is not defined`, artinya data chart tidak ter-inject.
+- Plugin menggunakan **inline script injection** (`<script>var sisChartData = …;</script>`) langsung setelah `get_header()` — pastikan template file `generation-bulletin.php` dan `capacity-bulletin.php` tidak dioverride oleh tema.
 - Pastikan post type bulletin-nya benar (`solar_gen_index` atau `solar_cap_index`), bukan post biasa.
+- Pastikan minimal ada 1 baris data di database untuk periode tersebut.
 
 ### URL bulletin 404
 - Flush permalink: **Admin → Settings → Permalinks → Save Changes**.
@@ -400,4 +402,4 @@ wp post list --post_type=solar_cap_index --post_status=draft
 
 ---
 
-*Guide ini mengacu pada plugin versi 1.0.0. Update guide ini setiap ada perubahan workflow atau struktur plugin.*
+*Guide ini mengacu pada plugin versi 1.0.1. Update guide ini setiap ada perubahan workflow atau struktur plugin.*
