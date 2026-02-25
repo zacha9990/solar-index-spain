@@ -103,7 +103,7 @@ class SIS_Cron {
         wp_send_json_success(['message' => 'Master CSVs regenerated.']);
     }
 
-    private function create_bulletin_drafts(int $year, int $month): void {
+    public function create_bulletin_drafts(int $year, int $month): void {
         $period_label = date('F Y', mktime(0, 0, 0, $month, 1, $year));
         $last_day     = date('Y-m-d', mktime(0, 0, 0, $month + 1, 0, $year));
         $today        = date('Y-m-d');

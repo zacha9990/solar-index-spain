@@ -47,6 +47,9 @@ if ($override_year && $override_month) {
         SIS_CSV_Exporter::regenerate_master();
         SIS_CSV_Exporter::generate_monthly_slice($override_year, $override_month);
 
+        $cron = new SIS_Cron();
+        $cron->create_bulletin_drafts($override_year, $override_month);
+
         echo "✓ Fetch complete. Generation: {$gen_data['gwh']} GWh, Capacity: {$cap_data['gw']} GW\n";
 
     } catch (SIS_Validation_Exception $e) {
