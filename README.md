@@ -300,7 +300,7 @@ $v->validate_capacity(['gw' => 32.146], 2025, 1);
 |-----------|-------|-----------|
 | `SOLAR_GEN_MIN_GWH` | 500 | Minimum wajar (Januari, musim dingin) |
 | `SOLAR_GEN_MAX_GWH` | 8000 | Maksimum wajar (Juli, puncak musim panas) |
-| `SOLAR_CAP_MIN_GW` | 20.0 | Sudah di atas ini sejak ~2022 |
+| `SOLAR_CAP_MIN_GW` | 15.0 | Spanyol ~16 GW di awal 2022, naik ke 20+ GW akhir 2022 |
 | `SOLAR_CAP_MAX_GW` | 100.0 | Buffer besar untuk proyeksi masa depan |
 | `MAX_MOM_CHANGE_PCT` | 80 | Flag jika MoM > 80% (kemungkinan error data) |
 

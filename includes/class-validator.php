@@ -5,7 +5,7 @@ class SIS_Validator {
 
     const SOLAR_GEN_MIN_GWH  = 500;
     const SOLAR_GEN_MAX_GWH  = 8000;
-    const SOLAR_CAP_MIN_GW   = 20.0;
+    const SOLAR_CAP_MIN_GW   = 15.0;   // Spanyol ~16 GW di awal 2022, naik ke 20+ GW akhir 2022
     const SOLAR_CAP_MAX_GW   = 100.0;
     const MAX_MOM_CHANGE_PCT = 80;
 
