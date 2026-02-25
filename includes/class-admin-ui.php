@@ -4,11 +4,12 @@ defined('ABSPATH') || exit;
 class SIS_Admin_UI {
 
     public function __construct() {
-        add_action('admin_menu',                   [$this, 'add_menu']);
-        add_action('admin_enqueue_scripts',        [$this, 'enqueue_assets']);
-        add_action('wp_ajax_sis_manual_entry',     [$this, 'handle_manual_entry']);
-        add_action('wp_ajax_sis_run_fetch',        [$this, 'handle_run_fetch']);
-        add_action('wp_ajax_sis_get_log',          [$this, 'handle_get_log']);
+        add_action('admin_menu',                        [$this, 'add_menu']);
+        add_action('admin_enqueue_scripts',             [$this, 'enqueue_assets']);
+        add_action('wp_ajax_sis_manual_entry',          [$this, 'handle_manual_entry']);
+        add_action('wp_ajax_sis_run_fetch',             [$this, 'handle_run_fetch']);
+        add_action('wp_ajax_sis_run_fetch_single',      [$this, 'handle_run_fetch_single']);
+        add_action('wp_ajax_sis_get_log',               [$this, 'handle_get_log']);
     }
 
     public function add_menu(): void {
@@ -98,6 +99,24 @@ class SIS_Admin_UI {
                 <p>Trigger a live fetch from REData API for last month's data. Runs validation before saving.</p>
                 <button id="sis-run-fetch" class="button button-secondary">&#9654; Run Fetch Now</button>
                 <div id="sis-fetch-status" style="margin-top:8px;"></div>
+            </div>
+
+            <!-- ── BACKFILL YEAR ─────────────────────────────────────────── -->
+            <div class="sis-admin-card">
+                <h2>Backfill Entire Year</h2>
+                <p>Fetch all months of a given year from REData API, one by one. Useful for filling historical data without CLI access.</p>
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                    <label for="sis-backfill-year"><strong>Year:</strong></label>
+                    <input id="sis-backfill-year" type="number" min="2021" max="<?php echo esc_attr(date('Y')); ?>"
+                           value="<?php echo esc_attr(date('Y') - 1); ?>" class="small-text">
+                    <label for="sis-backfill-start-month"><strong>From month:</strong></label>
+                    <input id="sis-backfill-start-month" type="number" min="1" max="12" value="1" class="small-text" style="width:50px;">
+                    <label for="sis-backfill-end-month"><strong>To month:</strong></label>
+                    <input id="sis-backfill-end-month" type="number" min="1" max="12" value="12" class="small-text" style="width:50px;">
+                    <button id="sis-backfill-year-btn" class="button button-primary">&#9654; Backfill Year</button>
+                    <button id="sis-backfill-stop-btn" class="button" style="display:none;">&#9632; Stop</button>
+                </div>
+                <div id="sis-backfill-progress" style="margin-top:12px;font-family:monospace;font-size:12px;max-height:200px;overflow-y:auto;background:#f6f7f7;border:1px solid #ddd;padding:8px 12px;display:none;"></div>
             </div>
 
             <!-- ── FETCH LOG ────────────────────────────────────────────── -->
@@ -265,6 +284,61 @@ class SIS_Admin_UI {
             wp_send_json_error('Unauthorized');
         }
         wp_send_json_success(['log' => get_option('sis_fetch_log', '')]);
+    }
+
+    // ── AJAX: Fetch Single Month (used by Backfill Year) ───────────────────
+
+    public function handle_run_fetch_single(): void {
+        check_ajax_referer('sis_admin_nonce', 'nonce');
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('Unauthorized');
+        }
+
+        $year  = absint($_POST['year']  ?? 0);
+        $month = absint($_POST['month'] ?? 0);
+
+        if ($year < 2021 || $month < 1 || $month > 12) {
+            wp_send_json_error('Invalid year or month.');
+        }
+
+        $logger = new SIS_Logger('SIS_Backfill');
+
+        try {
+            $gen_fetcher = new SIS_REData_Fetcher();
+            $gen_data    = $gen_fetcher->fetch_monthly_generation($year, $month);
+
+            $cap_fetcher = new SIS_REData_Cap_Fetcher();
+            $cap_data    = $cap_fetcher->fetch_monthly_capacity($year, $month);
+
+            $validator = new SIS_Validator();
+            $validator->validate_generation($gen_data, $year, $month);
+            $validator->validate_capacity($cap_data, $year, $month);
+
+            $metrics = SIS_Derived_Metrics::calculate($year, $month, $gen_data['gwh'], $cap_data['gw']);
+
+            SIS_Database::upsert_generation($year, $month, $gen_data['gwh'], $metrics['gen'], $gen_data['source']);
+            SIS_Database::upsert_capacity($year, $month, $cap_data['gw'], $metrics['cap'], $cap_data['source']);
+
+            SIS_CSV_Exporter::regenerate_master();
+            SIS_CSV_Exporter::generate_monthly_slice($year, $month);
+
+            $this->create_bulletin_drafts($year, $month);
+
+            $logger->success("Backfill OK: {$year}-{$month} — Gen: {$gen_data['gwh']} GWh, Cap: {$cap_data['gw']} GW");
+
+            wp_send_json_success([
+                'period'  => sprintf('%04d-%02d', $year, $month),
+                'gwh'     => $gen_data['gwh'],
+                'gw'      => $cap_data['gw'],
+            ]);
+
+        } catch (SIS_Validation_Exception $e) {
+            $logger->error("Backfill validation {$year}-{$month}: " . $e->getMessage());
+            wp_send_json_error(['period' => sprintf('%04d-%02d', $year, $month), 'message' => $e->getMessage()]);
+        } catch (Exception $e) {
+            $logger->error("Backfill error {$year}-{$month}: " . $e->getMessage());
+            wp_send_json_error(['period' => sprintf('%04d-%02d', $year, $month), 'message' => $e->getMessage()]);
+        }
     }
 
     // ── Bulletin Draft Creator ─────────────────────────────────────────────
