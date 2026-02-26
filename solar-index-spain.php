@@ -64,29 +64,41 @@ add_action('plugins_loaded', function (): void {
     });
 });
 
-// Enqueue front-end assets only on bulletin / hub pages
+// Enqueue front-end assets on bulletin and data hub pages
 add_action('wp_enqueue_scripts', function (): void {
-    if (!is_singular(['solar_gen_index', 'solar_cap_index'])) {
+    global $post;
+    $is_bulletin = is_singular(['solar_gen_index', 'solar_cap_index']);
+    $is_hub      = is_page() && $post && in_array(
+        $post->post_name,
+        ['solar-generation-spain', 'solar-capacity-spain'],
+        true
+    );
+
+    if (!$is_bulletin && !$is_hub) {
         return;
     }
-    wp_enqueue_script(
-        'chartjs',
-        'https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js',
-        [],
-        '4',
-        true
-    );
-    wp_enqueue_script(
-        'sis-charts',
-        SIS_PLUGIN_URL . 'assets/js/charts.js',
-        ['chartjs'],
-        SIS_VERSION,
-        true
-    );
+
     wp_enqueue_style(
         'sis-bulletin',
         SIS_PLUGIN_URL . 'assets/css/bulletin.css',
         [],
         SIS_VERSION
     );
+
+    if ($is_bulletin) {
+        wp_enqueue_script(
+            'chartjs',
+            'https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js',
+            [],
+            '4',
+            true
+        );
+        wp_enqueue_script(
+            'sis-charts',
+            SIS_PLUGIN_URL . 'assets/js/charts.js',
+            ['chartjs'],
+            SIS_VERSION,
+            true
+        );
+    }
 });
